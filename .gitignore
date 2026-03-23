@@ -416,3 +416,8 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+**/wwwroot/css/app.min.css
+*secrets*.json
+*.env
+.env.local
