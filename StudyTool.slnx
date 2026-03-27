@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="StudyTool.Api/StudyTool.Api.csproj" />
+  <Project Path="StudyTool.Core/StudyTool.Core.csproj" />
+  <Project Path="StudyTool.Data/StudyTool.Data.csproj" />
+  <Project Path="StudyTool.Tests/StudyTool.Tests.csproj" />
+  <Project Path="StudyTool.Web/StudyTool.Web.csproj" />
+</Solution>
