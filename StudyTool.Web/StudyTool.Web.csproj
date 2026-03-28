@@ -21,4 +21,8 @@
     <UserSecretsId>f6eba2ab-3ce8-4e68-a745-fd5688a6b1fe</UserSecretsId>
   </PropertyGroup>
 
+  <Target Name="BuildTailwind" BeforeTargets="Build">
+    <Exec Command="npm run css:build" WorkingDirectory="$(ProjectDir)" />
+  </Target>
+
 </Project>

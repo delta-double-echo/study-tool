@@ -1,0 +1,19 @@
+{
+  "name": "studytool.web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "css:build": "tailwindcss.cmd --input ./wwwroot/css/app.css --output ./wwwroot/css/app.min.css --minify",
+    "css:watch": "tailwindcss.cmd --input ./wwwroot/css/app.css --output ./wwwroot/css/app.min.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.2",
+    "@tailwindcss/typography": "^0.5.19",
+    "tailwindcss": "^4.2.2"
+  }
+}
