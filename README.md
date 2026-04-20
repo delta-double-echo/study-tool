@@ -118,8 +118,15 @@ secrets would be shared via a secrets management platform such as HashiCorp Vaul
 or Azure Key Vault, with production secrets injected via environment variables 
 through Azure App Service Application Settings.
 
-## Planned Features
-- [ ] Card library with search and filtering
+## Features
+
+- [x] Card library with search and group filtering
+- [x] Flag for improvement filter
+- [x] Add card form with image upload
+- [x] Seed data with onboarding content
+- [ ] Edit and delete cards
+- [ ] Detail modal with full card view
+- [ ] Tally counter
 - [ ] Cue card quiz mode
 - [ ] AI-powered multiple choice quiz (Q&A mode)
 - [ ] REST API with JWT authentication
@@ -127,3 +134,19 @@ through Azure App Service Application Settings.
 - [ ] Message queuing (RabbitMQ)
 - [ ] Azure deployment
 ```
+
+## Developer Notes
+
+### Blazor rendering model
+Pages that require user interaction (forms, filtering, events) must include 
+`@rendermode InteractiveServer` at the top of the `.razor` file. Pages without 
+this directive render as static SSR and event handlers will not fire.
+
+### Code-behind pattern
+All Blazor pages use the code-behind pattern — logic lives in `PageName.razor.cs` 
+as a partial class, keeping markup and C# cleanly separated.
+
+### Image uploads
+Uploaded images are saved to `wwwroot/uploads/` and the path is stored in the 
+database. This folder is excluded from Git. In production this should be replaced 
+with Azure Blob Storage.
