@@ -7,7 +7,7 @@ namespace StudyTool.Core.Interfaces
 {
     public interface ICardService
     {
-        Task<IEnumerable<Card>> GetAllAsync(string? group = null, bool flaggedOnly = false);
+        Task<IEnumerable<Card>> GetAllAsync(Guid? group = null, bool flaggedOnly = false);
         Task<Card?> GetByIdAsync(Guid id);
         Task<Card> CreateAsync(Card card, string userId);
         Task<Card> UpdateAsync(Card card);

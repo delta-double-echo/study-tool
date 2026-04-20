@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using StudyTool.Core.Interfaces;
 using StudyTool.Data;
+using StudyTool.Data.Services;
 using StudyTool.Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,9 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<ICardService, CardService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
 
 var app = builder.Build();
 
