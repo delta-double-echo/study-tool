@@ -1,7 +1,120 @@
 ﻿@page "/"
+@rendermode InteractiveServer
 
-<PageTitle>Home</PageTitle>
+<div class="p-6">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-lg font-medium text-gray-900">Library</h1>
+        <button class="bg-orange-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-orange-700">
+            + Add card
+        </button>
+    </div>
 
-<h1>Hello, world!</h1>
+    <div class="flex gap-4 mb-6">
+        <div class="flex-1 flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-2">
+            <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 16 16">
+                <circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.3" />
+                <path d="M10.5 10.5L13.5 13.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+            </svg>
+            <input @oninput="OnSearchInput"
+                   placeholder="Search questions and answers..."
+                   class="flex-1 text-sm outline-none bg-transparent text-gray-900 placeholder-gray-400" />
+        </div>
+    </div>
 
-Welcome to your new app.
+    @if (errorMessage is not null)
+    {
+        <div class="text-sm text-red-600 bg-red-50 px-4 py-3 rounded-lg mb-4">
+            @errorMessage
+        </div>
+    }
+
+    <div class="flex gap-6">
+        <aside class="w-48 flex-shrink-0">
+            <div class="bg-white border border-gray-200 rounded-xl p-3">
+                <p class="text-xs text-gray-400 uppercase tracking-wide px-2 pb-1">Groups</p>
+                <button @onclick="() => SelectGroup(null)"
+                        class="@GroupItemClass(null) w-full text-left flex justify-between items-center px-2 py-1.5 rounded-lg text-sm">
+                    <span>All cards</span>
+                    <span class="text-xs text-gray-400">@allCards.Count()</span>
+                </button>
+                @foreach (var group in groups)
+                {
+                    <button @onclick="() => SelectGroup(group.Id)"
+                            class="@GroupItemClass(group.Id) w-full text-left flex justify-between items-center px-2 py-1.5 rounded-lg text-sm">
+                        <span>@group.Name</span>
+                        <span class="text-xs text-gray-400">@group.Cards.Count()</span>
+                    </button>
+                }
+                <div class="border-t border-gray-100 my-2"></div>
+                <p class="text-xs text-gray-400 uppercase tracking-wide px-2 pb-1">Filter by</p>
+                <button @onclick="ToggleFlagged"
+                        class="@FlagFilterClass() w-full text-left px-2 py-1.5 rounded-lg text-sm">
+                    Needs improvement
+                </button>
+            </div>
+        </aside>
+
+        <div class="flex-1">
+            @if (isLoading)
+            {
+                <p class="text-sm text-gray-400">Loading...</p>
+            }
+            else if (!filteredCards.Any())
+            {
+                <p class="text-sm text-gray-400">No cards found.</p>
+            }
+            else
+            {
+                <div class="text-xs text-gray-400 mb-3">@filteredCards.Count() results</div>
+                <div class="flex flex-col gap-2">
+                    @foreach (var card in filteredCards)
+                    {
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 hover:border-orange-300 cursor-pointer transition-colors">
+                            <div class="flex justify-between items-start gap-4">
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-xs bg-orange-50 text-orange-800 px-2 py-0.5 rounded-full">
+                                            @card.Group.Name
+                                        </span>
+                                    </div>
+                                    <p class="text-sm font-medium text-gray-900 mb-1">@card.Title</p>
+                                    <p class="text-xs text-gray-500 line-clamp-2">@card.Content</p>
+                                    <div class="flex items-center gap-2 mt-3">
+                                        <span class="text-xs text-gray-400">
+                                            ● @card.TallyEvents.Count() +1
+                                        </span>
+                                        @if (card.FlaggedForImprovement)
+                                        {
+                                            <span class="text-xs bg-orange-50 text-orange-700 px-2 py-0.5 rounded-full">improve</span>
+                                        }
+                                        @if (card.ImagePath is not null)
+                                        {
+                                            <span class="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded-full">img</span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-1.5 flex-shrink-0">
+                                    <button class="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100">
+                                        <svg class="w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 14 14">
+                                            <path d="M2 10L10 2L12 4L4 12L2 12L2 10Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" />
+                                        </svg>
+                                    </button>
+                                    <button class="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100">
+                                        <svg class="w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 14 14">
+                                            <path d="M5 2H9M2 4H12M11 4L10.3 11H3.7L3 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </button>
+                                    <button class="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100">
+                                        <svg class="w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 14 14">
+                                            <path d="M3 2V12M3 2H10L8 6H10L3 10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
