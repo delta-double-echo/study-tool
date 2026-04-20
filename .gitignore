@@ -422,3 +422,5 @@ FodyWeavers.xsd
 *secrets*.json
 *.env
 .env.local
+
+**/wwwroot/uploads/
